@@ -31,12 +31,6 @@ _int_dtypes = {
     torch.int32,
     torch.int64,
 }
-try:
-    # torch >=2.3
-    _int_dtypes |= {torch.uint16, torch.uint32, torch.uint64}
-except AttributeError:
-    pass
-
 
 _array_api_dtypes = {
     torch.bool,
