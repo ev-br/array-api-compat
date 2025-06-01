@@ -528,21 +528,27 @@ def nonzero(x: Array, /, xp: Namespace, **kwargs: object) -> tuple[Array, ...]:
 
 
 def ceil(x: Array, /, xp: Namespace, **kwargs: object) -> Array:
-    if xp.issubdtype(x.dtype, xp.integer):
-        return x
-    return xp.ceil(x, **kwargs)
+    result = xp.ceil(x, **kwargs)
+    if result.dtype != x.dtype:
+        # numpy < 2: ceil(int array) is float
+        result = xp.asarray(result, dtype=x.dtype)
+    return result
 
 
 def floor(x: Array, /, xp: Namespace, **kwargs: object) -> Array:
-    if xp.issubdtype(x.dtype, xp.integer):
-        return x
-    return xp.floor(x, **kwargs)
+    result = xp.floor(x, **kwargs)
+    if result.dtype != x.dtype:
+        # numpy < 2: floor(int array) is float
+        result = xp.asarray(result, dtype=x.dtype)
+    return result
 
 
 def trunc(x: Array, /, xp: Namespace, **kwargs: object) -> Array:
-    if xp.issubdtype(x.dtype, xp.integer):
-        return x
-    return xp.trunc(x, **kwargs)
+    result = xp.trunc(x, **kwargs)
+    if result.dtype != x.dtype:
+        # numpy < 2: trunc(int array) is float
+        result = xp.asarray(result, dtype=x.dtype)
+    return result
 
 
 # linear algebra functions
