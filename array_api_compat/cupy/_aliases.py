@@ -120,6 +120,25 @@ def count_nonzero(
        return cp.expand_dims(result, axis)
    return result
 
+# ceil, floor, and trunc return integers for integer inputs
+
+def ceil(x: Array, /) -> Array:
+    if cp.issubdtype(x.dtype, cp.integer):
+        return x.copy()
+    return cp.ceil(x)
+
+
+def floor(x: Array, /) -> Array:
+    if cp.issubdtype(x.dtype, cp.integer):
+        return x.copy()
+    return cp.floor(x)
+
+
+def trunc(x: Array, /) -> Array:
+    if cp.issubdtype(x.dtype, cp.integer):
+        return x.copy()
+    return cp.trunc(x)
+
 
 # take_along_axis: axis defaults to -1 but in cupy (and numpy) axis is a required arg
 def take_along_axis(x: Array, indices: Array, /, *, axis: int = -1):
@@ -148,6 +167,6 @@ __all__ = _aliases.__all__ + ['__array_namespace_info__', 'asarray', 'astype',
                               'atan2', 'atanh', 'bitwise_left_shift',
                               'bitwise_invert', 'bitwise_right_shift',
                               'bool', 'concat', 'count_nonzero', 'pow', 'sign',
-                              'take_along_axis']
+                              'ceil', 'floor', 'trunc', 'take_along_axis']
 
 _all_ignore = ['cp', 'get_xp']
