@@ -159,7 +159,8 @@ def floor(x: Array, /) -> Array:
 # https://github.com/numpy/numpy/issues/29124
 def round(x: Array, /) -> Array:
     if np.issubdtype(x.dtype, np.integer):
-        return x
+        if np.__version__ < '2':
+            return x.copy()
     return np.round(x)
 
 
