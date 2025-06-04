@@ -142,6 +142,26 @@ def take_along_axis(x: Array, indices: Array, /, *, axis: int = -1):
     return np.take_along_axis(x, indices, axis=axis)
 
 
+# ceil, floor, and trunc return integers for integer inputs in NumPy < 2
+
+def ceil(x: Array, /) -> Array:
+    if np.issubdtype(x.dtype, np.integer):
+        return x.copy()
+    return np.ceil(x)
+
+
+def floor(x: Array, /) -> Array:
+    if np.issubdtype(x.dtype, np.integer):
+        return x.copy()
+    return np.floor(x)
+
+
+def round(x: Array, /) -> Array:
+    if np.issubdtype(x.dtype, np.integer):
+        return x.copy()
+    return np.round(x)
+
+
 # These functions are completely new here. If the library already has them
 # (i.e., numpy 2.0), use the library version instead of our wrapper.
 if hasattr(np, "vecdot"):
@@ -170,6 +190,9 @@ __all__ = [
     "atan",
     "atan2",
     "atanh",
+    "ceil",
+    "floor",
+    "round",
     "bitwise_left_shift",
     "bitwise_invert",
     "bitwise_right_shift",
