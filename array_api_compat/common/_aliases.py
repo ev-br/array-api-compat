@@ -524,33 +524,6 @@ def nonzero(x: Array, /, xp: Namespace, **kwargs: object) -> tuple[Array, ...]:
     return xp.nonzero(x, **kwargs)
 
 
-# ceil, floor, and trunc return integers for integer inputs
-
-
-def ceil(x: Array, /, xp: Namespace, **kwargs: object) -> Array:
-    result = xp.ceil(x, **kwargs)
-    if result.dtype != x.dtype:
-        # numpy < 2: ceil(int array) is float
-        result = xp.asarray(result, dtype=x.dtype)
-    return result
-
-
-def floor(x: Array, /, xp: Namespace, **kwargs: object) -> Array:
-    result = xp.floor(x, **kwargs)
-    if result.dtype != x.dtype:
-        # numpy < 2: floor(int array) is float
-        result = xp.asarray(result, dtype=x.dtype)
-    return result
-
-
-def trunc(x: Array, /, xp: Namespace, **kwargs: object) -> Array:
-    result = xp.trunc(x, **kwargs)
-    if result.dtype != x.dtype:
-        # numpy < 2: trunc(int array) is float
-        result = xp.asarray(result, dtype=x.dtype)
-    return result
-
-
 # linear algebra functions
 
 
@@ -713,9 +686,6 @@ __all__ = [
     "argsort",
     "sort",
     "nonzero",
-    "ceil",
-    "floor",
-    "trunc",
     "matmul",
     "matrix_transpose",
     "tensordot",

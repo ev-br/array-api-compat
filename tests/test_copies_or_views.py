@@ -37,7 +37,7 @@ def is_view(func, a, value):
     """Apply `func`, mutate the output; does the input change?"""
     b = func(a)
     b[0] = value
-    return a[0] == value
+    return a[0] == value, b.dtype == a.dtype
 
 
 @pytest.mark.parametrize('xp_name', LIB_NAMES) 
@@ -57,10 +57,11 @@ def test_view_or_copy(inputs, xp_name):
 
     # bare namespace: mutate the output, does the input change?
     a = bare_xp.asarray(arr_input, dtype=dtype)
-    is_view_bare = is_view(bare_func, a, value)
+    is_view_bare, dtype_same_bare = is_view(bare_func, a, value)
 
     # wrapped namespace: mutate the output, does the input change?
     a1 = wrapped_xp.asarray(arr_input, dtype=dtype)
-    is_view_wrapped = is_view(wrapped_func, a1, value)
+    is_view_wrapped, dtype_same_wrapped = is_view(wrapped_func, a1, value)
 
     assert is_view_bare == is_view_wrapped
+    assert dtype_same_bare == dtype_same_wrapped
