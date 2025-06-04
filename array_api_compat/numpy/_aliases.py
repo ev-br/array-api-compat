@@ -147,14 +147,14 @@ def take_along_axis(x: Array, indices: Array, /, *, axis: int = -1):
 def ceil(x: Array, /) -> Array:
     if np.issubdtype(x.dtype, np.integer):
         if np.__version__ < '2':
-            return x
+            return x.copy()
     return np.ceil(x)
 
 
 def floor(x: Array, /) -> Array:
     if np.issubdtype(x.dtype, np.integer):
         if np.__version__ < '2':
-            return x
+            return x.copy()
     return np.floor(x)
 
 
