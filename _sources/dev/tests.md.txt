@@ -7,11 +7,12 @@ the array API standard. There are also array-api-compat specific tests in
 These tests should be limited to things that are not tested by the test suite,
 e.g., tests for [helper functions](../helper-functions.rst) or for behavior
 that is not strictly required by the standard. To run these tests, install the
-dependencies from `requirements-dev.txt` (array-api-compat has [no hard
+dependencies from the `dev` optional group (array-api-compat has [no hard
 runtime dependencies](no-dependencies)).
 
-array-api-tests is run against all supported libraries are tested on CI
-([except for JAX](jax-support) and [Sparse](sparse-support)). This is achieved
+The array-api-tests suite is run against all supported libraries on CI
+([except for JAX](jax-support), [mparray](mparray-support), and
+[Sparse](sparse-support)). This is achieved
 by a [reusable GitHub Actions
 Workflow](https://github.com/data-apis/array-api-compat/blob/main/.github/workflows/array-api-tests.yml).
 Most libraries have tests that must be xfailed or skipped for various reasons.

@@ -1,5 +1,266 @@
 # Changelog
 
+## 1.16.0 (2026-10-25)
+
+### New features
+
+- New helpers for the `mparray` library have been added: `is_mparray_array` and
+  `is_mparray_namespace`.
+- New helpers for the `dpnp` library have been added: `is_dpnp_array` and
+  `is_dpnp_namespace`.
+- `torch.reshape` now implements `copy=` arguments.
+- Pytorch binary functions have been wrapped to accept (array, python scalar) pairs.
+
+### Perfomance and other improvements
+
+- Performance of `numpy.clip` has been improved
+- `numpy.reshape` uses the native numpy `reshape` function for `numpy >= 2.1`
+- Multiple `fft` functions avoid an unneccessary copy, which improves performance
+  and memory consumption
+- `py.typed` marker is included in the installed package.
+
+### The following users contributed to this release:
+
+Raashish Aggarwal,
+Evgeni Burovski,
+Lucas Colley,
+Stanley C,
+Matt Haberland, 
+Tim Head,
+Chris Ninham,
+Laslo Ruhberg.
+
+
+## 1.15.0 (2026-06-07)
+
+### Major changes
+
+- `array_namespace` can now be used under `torch.compile`.
+- The build system has changed from `setuptools` to `meson-python`.
+  Projects vendoring array-api-compat inside a meson project can now
+  rely on the in-tree meson project definition, which exposes the Python
+  sources via the `sources` variable. For example:
+  ```meson
+  array_api_compat = subproject('array_api_compat')
+  array_api_compat_sources = array_api_compat.get_variable('sources')
+  foreach prefix, files : array_api_compat_sources
+    py3.install_sources(files, subdir: external_dir / prefix)
+  endforeach
+  ```
+
+### Minor changes
+
+- `torch.round` now supports complex input.
+- `torch.arange` now works around missing dtype implementations instead of raising
+  an exception.
+
+Bug fixes:
+  - `np.matrix` instances are no longer considered to be standard array objects.
+  - `torch.meshgrid` now correctly handles the case of no input arrays.
+
+### Contributors
+
+The following users contributed to this release:
+
+Lucas Colley,
+Evgeni Burovski,
+Chris Ninham,
+Dimitri Papadopoulos Orfanos.
+
+## 1.14.0 (2026-02-26)
+
+### Major changes
+
+This release targets the 2025.12 Array API revision. This includes
+
+  - `__array_api_version__` for the wrapped APIs is now set to `2025.12`;
+  - wrappers for `linalg.eig` and `linalg.eigvals`;
+  - wrappers for `isin` and `searchsorted` to accept Python scalars;
+  - wrappers for `expand_dims` accepting tuple axes;
+  - `broadcast_arrays`, `meshgrid` and `__array_api_info__().devices()` have been
+    changed to return tuples, not lists;
+
+Additionally,
+
+  - `clip` wrappers have been fixed to be compatible with `torch.vmap`.
+
+
+### Minor changes
+
+  - `expand_dims` wrappers have been fixed to accept its `axis` argument as a keyword
+    or positional argument;
+  - `torch.clip` wrappers have been fixed to correctly handle `nan` scalars;
+  - `torch.repeat` wrapper has been fixed to not error out for short integers;
+
+
+The following users contributed to this release:
+
+Evgeni Burovski,
+Josh Soref.
+
+
+## 1.13.0 (2025-12-28)
+
+
+### Major changes
+
+- Support for Python 3.14 has been added.
+- Symbols exported in public namespaces have been reviewed and adjusted.
+- `torch.take` and `torch.take_along_axis` now support negative indices.
+- `torch.meshgrid` now correctly processes the `indexing` argument.
+- View/copy semantics are now observed for the `ceil`, `floor`, and `trunc` functions.
+
+### Minor changes
+
+- `array_namespace` has been sped up via caching.
+- The `stable` parameter of `torch.argsort` now defaults to `True`, per the standard.
+- Type annotations have seen progress.
+- `is_jax_array` has been adjusted for compatibility with `jax>=0.8.2`
+
+
+The following users contributed to this release:
+
+Evgeni Burovski,
+Guido Imperiale,
+Lucas Colley,
+Arthur Lacote,
+Martin Schuck,
+Matt Haberland.
+
+
+## 1.12.0 (2025-05-13)
+
+
+### Major changes
+
+- The build system has been updated to use `pyproject.toml` instead of `setup.py`
+- Support for Python 3.9 has been dropped. The minimum supported Python version is now
+  3.10; the minimum supported NumPy version is 1.22.
+- The `linalg` extension works correctly with `pytorch>=2.7`.
+- Multiple improvements to handling of devices in CuPy and PyTorch backends.
+  Support for multiple devices in CuPy is still immature and you should use
+  context managers rather than relying on input-output device propagation or
+  on the `device` parameter.  Please report any issues you encounter.
+
+### Minor changes
+
+- `finfo` and `iinfo` functions now accept array arguments, in accordance with the
+   Array API spec;
+- `torch.asarray` function propagates the device of the input array. This works around
+   the [pytorch issue #150199](https://github.com/pytorch/pytorch/issues/150199);
+- `torch.repeat` function is now available;
+- `torch.count_nonzero` function now correctly handles the case of a tuple `axis`
+  arguments and `keepdims=True`;
+- `torch.meshgrid` wrapper defaults to `indexing="xy"`, in accordance with the
+  array API specification;
+- `cupy.asarray` function now implements the `copy=False` argument, albeit
+  at the cost of risking to make a temporary copy.
+- In `numpy.take_along_axis` and `cupy.take_along_axis` the `axis` parameter now
+  defaults to -1, in accordance to the Array API spec.
+
+
+The following users contributed to this release:
+
+Evgeni Burovski,
+Lucas Colley,
+Neil Girdhar,
+Joren Hammudoglu,
+Guido Imperiale
+
+
+## 1.11.2 (2025-03-20)
+
+This is a bugfix release with no new features compared to version 1.11.
+
+- fix the `result_type` wrapper for pytorch. Previously, `result_type` had multiple
+  issues with scalar arguments.
+- fix several issues with `clip` wrappers. Previously, `clip` was failing to allow
+  behaviors which are unspecified by the 2024.12 standard but allowed by the array
+  libraries.
+
+The following users contributed to this release:
+
+Evgeni Burovski
+Guido Imperiale
+Magnus Dalen Kvalevåg
+
+
+## 1.11.1 (2025-03-04)
+
+This is a bugfix release with no new features compared to version 1.11.
+
+### Major Changes
+
+- fix `count_nonzero` wrappers: work around the lack of the `keepdims` argument in
+  several array libraries (torch, dask, cupy); work around numpy returning python
+  ints in for some input combinations.
+
+### Minor Changes
+
+- runnings self-tests does not require all array libraries. Missing libraries are
+  skipped.
+
+The following users contributed to this release:
+
+Evgeni Burovski
+Guido Imperiale
+
+
+## 1.11.0 (2025-02-27)
+
+### Major Changes
+
+This release targets the 2024.12 Array API revision. This includes
+
+  - `__array_api_version__` for the wrapped APIs is now set to `2024.12`;
+  - Wrappers for `count_nonzero`;
+  - Wrappers for `cumulative_prod`;
+  - Wrappers for `take_along_axis` (with the exception of Dask);
+  - Wrappers for `diff`;
+  - `__capabilities__` dict contains a `max_dimensions` key;
+  - Python scalars are accepted as arguments to `result_type`;
+  - `fft.fftfreq` and `fft.rfftfreq` functions now accept an optional `dtype`
+    argument to control the output data type.
+
+Note that these wrappers, as well as other 2024.12 features, are relatively undertested
+in this release, and may have rough edges. Please report any issues you encounter
+in [the issue tracker](https://github.com/data-apis/array-api-compat/issues).
+
+New functions to test properties of arrays:
+  - `is_writeable_array` (benefits NumPy, JAX, Sparse)
+  - `is_lazy_array` (benefits JAX, Dask, ndonnx)
+
+Improved support for JAX:
+  - Work arounds for `.device` attribute and `to_device` function
+    not working correctly within `jax.jit`
+
+### Minor Changes
+
+- Several improvements to `dask.array` wrappers:
+
+  - `size` returns None for arrays of unknown shapes.
+  - `astype(..., copy=True)` always copies, independently of the Dask version.
+  - implementations of `sort` and `argsort` are now available. Note that these
+    implementations are relatively crude, and might be memory intensive.
+  - `asarray` no longer accidentally materializes the Dask graph
+  - `torch` wrappers contain unsigned integer dtypes of widths >8 bits, `uint16`,
+    `uint32` and `uint64` if PyTorch version is at least 2.3. Note that the
+     unsigned integer support is incomplete in PyTorch itself, see
+     [gh-253](https://github.com/data-apis/array-api-compat/pull/253).
+
+### Authors
+
+The following users contributed to this release:
+
+Athan Reines
+Guido Imperiale
+Evgeni Burovski
+Guido Imperiale
+Lucas Colley
+Ralf Gommers
+Thomas Li
+
+
 ## 1.10.0 (2024-12-25)
 
 ### Major Changes
@@ -59,11 +320,11 @@
     `xp.__array_namespace_info__()`.
   - Various fixes to the `clip()` wrappers.
 
-- `torch.conj` now wrapps `torch.conj_physical`, which makes a copy rather
+- `torch.conj` now wraps `torch.conj_physical`, which makes a copy rather
   than setting the conjugation bit, as arrays with the conjugation bit set do
   not support some APIs.
 
-- `torch.sign` is now wrapped to support complex numbers and propogate nans
+- `torch.sign` is now wrapped to support complex numbers and propagate nans
   properly.
 
 ### Minor Changes
@@ -136,7 +397,7 @@
 
 - New flag `use_compat` to {func}`~.array_namespace` to force the use or
   non-use of the compat wrapper namespace. The default is to return a compat
-  namespace when it is appropiate.
+  namespace when it is appropriate.
 
 - Fix the `copy` flag to `asarray` for NumPy, CuPy, and Dask.
 
